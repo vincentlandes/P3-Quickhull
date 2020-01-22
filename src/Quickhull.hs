@@ -97,14 +97,14 @@ initialPartition points =
     headFlags = map (\x-> x == p1 || x == p2) newPoints
   in
     --T2 headFlags newPoints
-    
     error $ P.show $ run headFlags
+
 -- * Exercise 8
 segmentedPostscanl :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanl = undefined
+segmentedPostscanl something headFlags points = undefined
 
 segmentedPostscanr :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanr = undefined
+segmentedPostscanr something headFlags points = undefined
 
 -- * Exercise 9
 propagateL :: Elt a => Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
