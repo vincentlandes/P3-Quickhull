@@ -25,6 +25,12 @@ type SegmentedPoints = (Vector Bool, Vector Point)
 input1 :: Acc (Vector Point)
 input1 = use $ fromList (Z :. 15) [(1,4),(8,19),(5,9),(7,9),(4,2),(3,9),(9,16),(1,5),(9,11),(4,0),(8,18),(8,7),(7,18),(6,18),(4,19)]
 
+input2 :: Acc (Vector Int)
+input2 = use $ fromList (Z :. 14) [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+
+input3:: Acc (Vector Bool)
+input3 = use $ fromList (Z :. 5) [True,False,False,True,False]
+
 pointIsLeftOfLine :: Exp Line -> Exp Point -> Exp Bool
 pointIsLeftOfLine (T2 (T2 x1 y1) (T2 x2 y2)) (T2 x y) = nx * x + ny * y > c
   where
@@ -124,10 +130,10 @@ propagateLine (T2 headFlags points) = zip vecP1 vecP2
 
 -- * Exercise 11
 shiftHeadFlagsL :: Acc (Vector Bool) -> Acc (Vector Bool)
-shiftHeadFlagsL flags = generate (index1 (length flags)) (\x y -> y ) flags
+shiftHeadFlagsL flags = prescanr (\x y -> x) (lift False) flags
 
 shiftHeadFlagsR :: Acc (Vector Bool) -> Acc (Vector Bool)
-shiftHeadFlagsR flags = undefined
+shiftHeadFlagsR flags = prescanl (\x y -> y) (lift False) flags
 
 partition :: Acc SegmentedPoints -> Acc SegmentedPoints
 partition (T2 headFlags points) =
@@ -140,7 +146,7 @@ partition (T2 headFlags points) =
 
     -- * Exercise 12
     furthest :: Acc (Vector Point)
-    furthest = undefined
+    furthest = 
 
     -- * Exercise 13
     isLeft :: Acc (Vector Bool)
