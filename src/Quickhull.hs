@@ -102,8 +102,8 @@ initialPartition points =
     headFlags :: Acc (Vector Bool)
     headFlags = map (\x-> x == p1 || x == p2) newPoints
   in
-    --T2 headFlags newPoints
-    error $ P.show $ run headFlags
+    T2 headFlags newPoints
+    --error $ P.show $ run headFlags
 
 -- * Exercise 8
 segmentedPostscanl :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
@@ -146,7 +146,9 @@ partition (T2 headFlags points) =
 
     -- * Exercise 12
     furthest :: Acc (Vector Point)
-    furthest = 
+    furthest = undefined 
+
+    distance = zip (zipWith nonNormalizedDistance vecLine points) points
 
     -- * Exercise 13
     isLeft :: Acc (Vector Bool)
@@ -195,7 +197,8 @@ partition (T2 headFlags points) =
     newHeadFlags :: Acc (Vector Bool)
     newHeadFlags = undefined
   in
-    T2 newHeadFlags newPoints
+    --T2 newHeadFlags newPoints
+    error $ P.show $ run distance 
 
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
