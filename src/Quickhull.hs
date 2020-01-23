@@ -101,10 +101,12 @@ initialPartition points =
 
 -- * Exercise 8
 segmentedPostscanl :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanl something headFlags points = undefined
+segmentedPostscanl operator headFlags points = map snd (postscanl (segmented operator) Unsafe.undef (zip headFlags points))
 
 segmentedPostscanr :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanr something headFlags points = undefined
+segmentedPostscanr operator headFlags points = map snd (postscanr (segmented operator) Unsafe.undef (zip headFlags points))
+
+segmented op (T2 fx x) (T2 fy y) = T2 ( fx || fy ) ( fy ? (y, op x y) )
 
 -- * Exercise 9
 propagateL :: Elt a => Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
@@ -122,7 +124,7 @@ propagateLine (T2 headFlags points) = zip vecP1 vecP2
 
 -- * Exercise 11
 shiftHeadFlagsL :: Acc (Vector Bool) -> Acc (Vector Bool)
-shiftHeadFlagsL flags = undefined
+shiftHeadFlagsL flags = generate (index1 (length flags)) (\x y -> y ) flags
 
 shiftHeadFlagsR :: Acc (Vector Bool) -> Acc (Vector Bool)
 shiftHeadFlagsR flags = undefined
