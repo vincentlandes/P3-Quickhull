@@ -107,12 +107,14 @@ initialPartition points =
 
 -- * Exercise 8
 segmentedPostscanl :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanl operator headFlags points = map snd (postscanl (segmented operator) Unsafe.undef (zip headFlags points))
+segmentedPostscanl operator headFlags points = map snd (postscanl (segmentedL operator) Unsafe.undef (zip headFlags points))
 
 segmentedPostscanr :: Elt a => (Exp a -> Exp a -> Exp a) -> Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
-segmentedPostscanr operator headFlags points = map snd (postscanr (segmented operator) Unsafe.undef (zip headFlags points))
+segmentedPostscanr operator headFlags points = map snd (postscanr (segmentedR operator) Unsafe.undef (zip headFlags points))
 
-segmented op (T2 fx x) (T2 fy y) = T2 ( fx || fy ) ( fy ? (y, op x y) )
+segmentedL op (T2 fx x) (T2 fy y) = T2 ( fx || fy ) ( fy ? (y, op x y))
+segmentedR op (T2 fx x) (T2 fy y) = T2 ( fx || fy ) ( fx ? (x, op x y))
+
 
 -- * Exercise 9
 propagateL :: Elt a => Acc (Vector Bool) -> Acc (Vector a) -> Acc (Vector a)
@@ -146,7 +148,7 @@ partition (T2 headFlags points) =
 
     -- * Exercise 12
     furthest :: Acc (Vector Point)
-    furthest = undefined 
+    furthest = map snd $ propagateR headFlagsL $ segmentedPostscanl max headFlags distance 
 
     distance = zip (zipWith nonNormalizedDistance vecLine points) points
 
@@ -198,7 +200,7 @@ partition (T2 headFlags points) =
     newHeadFlags = undefined
   in
     --T2 newHeadFlags newPoints
-    error $ P.show $ run distance 
+    error $ P.show $ run furthest 
 
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
