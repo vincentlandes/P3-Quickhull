@@ -154,10 +154,15 @@ partition (T2 headFlags points) =
 
     -- * Exercise 13
     isLeft :: Acc (Vector Bool)
-    isLeft = undefined
-
+    isLeft = zipWith pointIsLeftOfLine linesL points
+    
     isRight :: Acc (Vector Bool)
     isRight = undefined
+
+    linesL = zip (map fst vecLine) furthest
+    linesR = zip (map snd vecLine) furthest
+    isRight' = zipWith pointIsLeftOfLine linesR points
+
 
     -- * Exercise 14
     segmentIdxLeft :: Acc (Vector Int)
@@ -200,7 +205,7 @@ partition (T2 headFlags points) =
     newHeadFlags = undefined
   in
     --T2 newHeadFlags newPoints
-    error $ P.show $ run furthest 
+    error $ P.show $ run isRight 
 
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
