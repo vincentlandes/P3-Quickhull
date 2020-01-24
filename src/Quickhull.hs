@@ -149,31 +149,29 @@ partition (T2 headFlags points) =
     -- * Exercise 12
     furthest :: Acc (Vector Point)
     furthest = map snd $ propagateR headFlagsL $ segmentedPostscanl max headFlags distance 
-
-    distance = zip (zipWith nonNormalizedDistance vecLine points) points
+      where distance = zip (zipWith nonNormalizedDistance vecLine points) points
 
     -- * Exercise 13
     isLeft :: Acc (Vector Bool)
     isLeft = zipWith pointIsLeftOfLine linesL points
+      where linesL = zip (map fst vecLine) furthest
     
     isRight :: Acc (Vector Bool)
-    isRight = undefined
+    isRight = zipWith pointIsLeftOfLine linesR points
+      where linesR = zip (map snd vecLine) furthest
 
-    linesL = zip (map fst vecLine) furthest
-    linesR = zip (map snd vecLine) furthest
-    isRight' = zipWith pointIsLeftOfLine linesR points
-
+    -- isRight' = zipWith pointIsLeftOfLine linesR points
 
     -- * Exercise 14
     segmentIdxLeft :: Acc (Vector Int)
-    segmentIdxLeft = undefined
+    segmentIdxLeft = segmentedPostscanl (+) headFlags (map boolToInt isLeft)
 
     segmentIdxRight :: Acc (Vector Int)
-    segmentIdxRight = undefined
+    segmentIdxRight = segmentedPostscanr (+) headFlags (map boolToInt isRight)
 
     -- * Exercise 15
     countLeft :: Acc (Vector Int)
-    countLeft = undefined
+    countLeft = segmentedPostscanr max headFlags segmentIdxLeft
 
     -- * Exercise 16
     segmentSize :: Acc (Vector Int)
@@ -205,7 +203,7 @@ partition (T2 headFlags points) =
     newHeadFlags = undefined
   in
     --T2 newHeadFlags newPoints
-    error $ P.show $ run isRight 
+    error $ P.show $ run isLeft 
 
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
