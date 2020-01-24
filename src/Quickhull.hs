@@ -173,7 +173,7 @@ partition (T2 headFlags points) =
 
     -- * Exercise 16
     segmentSize :: Acc (Vector Int)
-    segmentSize = zipWith3 (\x y z -> (x == lift True) ? (1 , (x == lift False) && (y == lift True) ? (z+1 , 0))) headFlags (shiftHeadFlagsL headFlags) segmentLR
+    segmentSize = zipWith3 (\x y z -> x ? (1 , y ? (z+1 , 0))) headFlags (shiftHeadFlagsL headFlags) segmentLR
 
     segmentLR = zipWith (+) segmentIdxLeft segmentIdxRight
 
@@ -197,24 +197,41 @@ partition (T2 headFlags points) =
 
     -- * Exercise 18
     empty :: Acc (Vector Point)
-    empty = undefined
+    empty = fill (index1 $ the size) $ T2 0 0
 
     newPoints :: Acc (Vector Point)
-    newPoints = undefined
+    newPoints = permute const empty (permutation !) points
 
     -- * Exercise 19
     newHeadFlags :: Acc (Vector Bool)
-    newHeadFlags = undefined
+    newHeadFlags = permute const (fill (index1 $ the size) $ lift False) (permutation2 !) (fill (shape points) $ lift True)
+
+    permutation2 :: Acc (Vector (Z :. Int))
+    permutation2 =
+      let
+        f :: Exp Bool -> Exp Point -> Exp Point -> Exp Bool -> Exp Bool -> Exp Int -> Exp Int -> Exp Int -> Exp Int -> Exp (Z :. Int)
+        f flag p furthestP left right offset cntLeft idxLeft idxRight
+          = flag ? (index1 offset
+            , p == furthestP ? (index1 (offset + cntLeft)
+            , ignore))
+      in
+        zipWith9 f headFlags points furthest isLeft isRight segmentOffset countLeft segmentIdxLeft segmentIdxRight    
+
+    -- temp1 = zipWith3 (\x y z -> x ? (lift True, ((not (lift y)) && (not( lift z)) ? (lift True, lift False)))) headFlags isLeft isRight
+    -- temp2 = zip3 points furthest temp1
+    -- temp3 = filter (\x@(p1,p2,b) -> p1 == p2 ? (lift False, lift True)) temp2
   in
-    --T2 newHeadFlags newPoints
-    error $ P.show $ run permutation
+    T2 newHeadFlags newPoints
+    --error $ P.show $ run newPoints
+
 -- * Exercise 20
-condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
-condition = undefined
+condition:: Acc SegmentedPoints -> Acc (Scalar Bool)
+condition (T2 f _) = unit $ not $ the $ all (== lift True) f
 
 -- * Exercise 21
 quickhull' :: Acc (Vector Point) -> Acc (Vector Point)
-quickhull' = undefined
+quickhull' points = asnd $ awhile condition partition segPoints
+  where segPoints = initialPartition points
 
 quickhull :: Vector Point -> Vector Point
 quickhull = run1 quickhull'
