@@ -187,7 +187,11 @@ partition (T2 headFlags points) =
       let
         f :: Exp Bool -> Exp Point -> Exp Point -> Exp Bool -> Exp Bool -> Exp Int -> Exp Int -> Exp Int -> Exp Int -> Exp (Z :. Int)
         f flag p furthestP left right offset cntLeft idxLeft idxRight
-          = undefined
+          = flag ? (index1 offset
+            , left ? (index1 (offset + idxLeft - 1)
+            , right ? (index1 (offset + idxRight + 1)
+            , p == furthestP ? (index1 (offset + cntLeft)
+            , ignore))))
       in
         zipWith9 f headFlags points furthest isLeft isRight segmentOffset countLeft segmentIdxLeft segmentIdxRight
 
@@ -203,7 +207,7 @@ partition (T2 headFlags points) =
     newHeadFlags = undefined
   in
     --T2 newHeadFlags newPoints
-    error $ P.show $ run segmentOffset
+    error $ P.show $ run permutation
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
 condition = undefined
