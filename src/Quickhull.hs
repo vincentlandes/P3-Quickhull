@@ -179,7 +179,7 @@ partition (T2 headFlags points) =
 
     segmentOffset :: Acc (Vector Int)
     size :: Acc (Scalar Int)
-    T2 segmentOffset size = undefined
+    T2 segmentOffset size = scanl' (+) 0 segmentSize
 
     -- * Exercise 17
     permutation :: Acc (Vector (Z :. Int))
@@ -203,7 +203,7 @@ partition (T2 headFlags points) =
     newHeadFlags = undefined
   in
     --T2 newHeadFlags newPoints
-    error $ P.show $ run segmentSize
+    error $ P.show $ run segmentOffset
 -- * Exercise 20
 condition :: Acc SegmentedPoints -> Acc (Scalar Bool)
 condition = undefined
