@@ -170,7 +170,7 @@ partition (T2 headFlags points) =
 
     -- * Exercise 16
     segmentSize :: Acc (Vector Int)
-    segmentSize = zipWith3 (\x y z -> x ? (1 , y ? (z+1, 0))) headFlags (shiftHeadFlagsL headFlags) segmentLR
+    segmentSize = zipWith3 (\x y z -> x ? (1 , y ? (z+1, 0))) headFlags headFlagsL segmentLR
 
     segmentLR = zipWith (+) segmentIdxLeft segmentIdxRight
 
