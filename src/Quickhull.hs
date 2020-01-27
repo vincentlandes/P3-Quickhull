@@ -184,9 +184,9 @@ partition (T2 headFlags points) =
       let
         f :: Exp Bool -> Exp Point -> Exp Point -> Exp Bool -> Exp Bool -> Exp Int -> Exp Int -> Exp Int -> Exp Int -> Exp (Z :. Int)
         f flag p furthestP left right offset cntLeft idxLeft idxRight
-          = flag ? (index1 offset
+          = flag ? (index1 offset --deze klopt
             , left ? (index1 (offset + idxLeft - 1)
-            , right ? (index1 (offset + idxRight + 1)
+            , right ? (index1 (offset + idxRight + cntLeft)
             , p == furthestP ? (index1 (offset + cntLeft)
             , ignore))))
       in
