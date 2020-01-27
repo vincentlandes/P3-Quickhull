@@ -155,7 +155,7 @@ partition (T2 headFlags points) =
     
     isRight :: Acc (Vector Bool)
     isRight = zipWith pointIsLeftOfLine linesR points
-    linesR = zip furthest (map snd vecLine)
+      where linesR = zip furthest (map snd vecLine)
 
     -- * Exercise 14
     segmentIdxLeft :: Acc (Vector Int)
@@ -171,8 +171,7 @@ partition (T2 headFlags points) =
     -- * Exercise 16
     segmentSize :: Acc (Vector Int)
     segmentSize = zipWith3 (\x y z -> x ? (1 , y ? (z+1, 0))) headFlags headFlagsL segmentLR
-
-    segmentLR = zipWith (+) segmentIdxLeft segmentIdxRight
+      where segmentLR = zipWith (+) segmentIdxLeft segmentIdxRight
 
     segmentOffset :: Acc (Vector Int)
     size :: Acc (Scalar Int)
@@ -184,7 +183,7 @@ partition (T2 headFlags points) =
       let
         f :: Exp Bool -> Exp Point -> Exp Point -> Exp Bool -> Exp Bool -> Exp Int -> Exp Int -> Exp Int -> Exp Int -> Exp (Z :. Int)
         f flag p furthestP left right offset cntLeft idxLeft idxRight
-          = flag ? (index1 offset --deze klopt
+          = flag ? (index1 offset
             , left ? (index1 (offset + idxLeft - 1)
             , right ? (index1 (offset + idxRight + cntLeft)
             , p == furthestP ? (index1 (offset + cntLeft)
